@@ -1,9 +1,9 @@
 import React from "react"
 import { TouchableOpacity, Text, View, ImageBackground }  from "react-native"
 
-export default function ImageButtonIos({ prefValue }) {
+export default function ImageButtonIos({ prefValue, onIncrement }) {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onIncrement}>
             <View style={{
                 flex: 1,
                 alignItems: 'center',

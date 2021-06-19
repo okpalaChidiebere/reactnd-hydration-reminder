@@ -22,3 +22,14 @@ export async function getWaterCount() {
 export async function getChargingReminderCount() {
     return await getDefaultSharedPreferences(KEY_CHARGING_REMINDER_COUNT)
 }
+
+export function setWaterCount(glassesOfWater) {
+    return AsyncStorage.mergeItem(HYDRATION_APP_STORAGE_KEY, JSON.stringify({
+        [KEY_WATER_COUNT]: glassesOfWater
+    }))
+}
+
+export async function incrementWaterCount() {
+    let waterCount = await getWaterCount()
+    setWaterCount(++waterCount)
+}

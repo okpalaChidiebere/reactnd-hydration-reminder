@@ -1,9 +1,9 @@
 import React from "react"
 import { Text, View, ImageBackground, TouchableNativeFeedback }  from "react-native"
 
-export default function ImageButtonAndroid({ prefValue }) {
+export default function ImageButtonAndroid({ prefValue, onIncrement }) {
     return(
-        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple("#E0E0E0", true)} >
+        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple("#E0E0E0", true)} onPress={onIncrement}>
             <View style={{
             flex: 1,
             flexGrow: 9,

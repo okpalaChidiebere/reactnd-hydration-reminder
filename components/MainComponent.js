@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import ImageButtonAndroid from "./ImageButtonAndroid"
 import ImageButtonIos from "./ImageButtonIos"
 import { getChargingReminderCount, getWaterCount, KEY_CHARGING_REMINDER_COUNT, KEY_WATER_COUNT } from "../utils/PreferenceUtilities"
-import { receivePreferences } from "../actions"
+import { receivePreferences, handleSavePreferences } from "../actions"
 
 function MainComponent ({ preferences, dispatch }) {
 
@@ -15,8 +15,8 @@ function MainComponent ({ preferences, dispatch }) {
                 const glassesOfWater = await getWaterCount()
 
                 const prefs = {
-                    [KEY_WATER_COUNT]: chargingReminders,
-                    [KEY_CHARGING_REMINDER_COUNT]: glassesOfWater,
+                    [KEY_WATER_COUNT]: glassesOfWater,
+                    [KEY_CHARGING_REMINDER_COUNT]: chargingReminders,
                 }
                 
                 dispatch(receivePreferences(prefs))
@@ -44,8 +44,8 @@ function MainComponent ({ preferences, dispatch }) {
             }}>
                 {
                 Platform.OS === "android"
-                ? <ImageButtonAndroid prefValue={preferences[KEY_WATER_COUNT]}/>
-                : <ImageButtonIos prefValue={preferences[KEY_WATER_COUNT]}/>
+                ? <ImageButtonAndroid prefValue={preferences[KEY_WATER_COUNT]} onIncrement={() => dispatch(handleSavePreferences(KEY_WATER_COUNT))}/>
+                : <ImageButtonIos prefValue={preferences[KEY_WATER_COUNT]} onIncrement={() => dispatch(handleSavePreferences(KEY_WATER_COUNT))}/>
             }
             </View>
             <View style={{
