@@ -2,11 +2,14 @@
   "name": "reactnd-hydration-reminder",
   "displayName": "reactnd-hydration-reminder",
   "expo": {
-    "name": "reactnd-hydration-reminder",
-    "slug": "reactnd-hydration-reminder",
+    "name": "Hydration Reminder",
+    "slug": "hydration reminder",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "notification": {
+      "icon": "./assets/ic_drink_notification.png"
+    }
   }
 }

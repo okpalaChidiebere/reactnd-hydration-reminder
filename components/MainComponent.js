@@ -1,10 +1,11 @@
 import React, { useEffect } from "react"
-import { Text, View, StyleSheet, Image, Platform }  from "react-native"
+import { Text, View, StyleSheet, Image, Platform, Button }  from "react-native"
 import { connect } from "react-redux"
 import ImageButtonAndroid from "./ImageButtonAndroid"
 import ImageButtonIos from "./ImageButtonIos"
 import { getChargingReminderCount, getWaterCount, KEY_CHARGING_REMINDER_COUNT, KEY_WATER_COUNT } from "../utils/PreferenceUtilities"
 import { receivePreferences, handleSavePreferences } from "../actions"
+import { remindUserBecauseCharging } from "../utils/NotificationUtils"
 
 function MainComponent ({ preferences, dispatch }) {
 
@@ -59,6 +60,9 @@ function MainComponent ({ preferences, dispatch }) {
                     source={require("../assets/ic_power_grey_80px.png")}
                 />
                 <Text style={{width: 350}}>{`Hydrate while charging reminder sent ${preferences[KEY_CHARGING_REMINDER_COUNT]} times`}</Text>
+            </View>
+            <View style={{ marginTop: 50}}>
+                    <Button title="Test Notification" onPress={() => remindUserBecauseCharging()} />
             </View>
         </View>
     )

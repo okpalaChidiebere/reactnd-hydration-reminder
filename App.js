@@ -7,6 +7,8 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { SafeAreaView } from "react-native-safe-area-context"
 import MainComponent, { MainComponentOptions } from "./components/MainComponent"
 import store from "./store/configureStore"
+import { main_component_stack } from "./utils/strings"
+import linking from "./linking"
 
 
 export default function App() {
@@ -29,10 +31,10 @@ const styles = StyleSheet.create({
 
 const Stack = createStackNavigator()
   const MainNavigator = () => (
-    <NavigationContainer>
-      <Stack.Navigator headerMode="screen" initialRouteName="MainComponent">
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator headerMode="screen" initialRouteName={main_component_stack}>
           <Stack.Screen
-            name="MainComponent"
+            name={main_component_stack}
             component={MainComponent}
             options={MainComponentOptions}
           />
