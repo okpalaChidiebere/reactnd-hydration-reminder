@@ -3,7 +3,7 @@
   "displayName": "reactnd-hydration-reminder",
   "expo": {
     "name": "Hydration Reminder",
-    "slug": "hydration reminder",
+    "slug": "hydration-reminder",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

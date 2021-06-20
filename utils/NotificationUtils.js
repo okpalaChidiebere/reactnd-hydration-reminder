@@ -13,6 +13,9 @@ export const WATER_REMINDER_LINK = (3417).toString()
  */
 const WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel"
 
+export const ACTION_INCREMENT_WATER_COUNT = "increment-water-count"
+export const ACTION_DISMISS_NOTIFICATION = "dismiss-notification"
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true, //for sunshine, the app is running, so no need to show alert. You may want this one like football scores app does.
@@ -34,7 +37,7 @@ export async function remindUserBecauseCharging(){
         return;
     }
 
-    //Since Android 0, you not allowed to send a notification, without assigning it to a channel
+    //Since Android O, you not allowed to send a notification, without assigning it to a channel
     if (Platform.OS === 'android') {
         const channel = await Notifications.getNotificationChannelAsync(WATER_REMINDER_NOTIFICATION_CHANNEL_ID)
 
@@ -48,9 +51,11 @@ export async function remindUserBecauseCharging(){
     }
 
     const data = { url: "hydrationReminder://app/"+WATER_REMINDER_LINK }
-    const notificationContent = BuildNotificationContent(charging_reminder_notification_title, charging_reminder_notification_body, data)
+    const notificationContent = BuildNotificationContent(WATER_REMINDER_NOTIFICATION_CHANNEL_ID, charging_reminder_notification_title, charging_reminder_notification_body, data)
 
-    await Notifications.scheduleNotificationAsync(createNotificationRequest(WATER_REMINDER_NOTIFICATION_CHANNEL_ID, notificationContent, null))
+    await Notifications.setNotificationCategoryAsync(WATER_REMINDER_NOTIFICATION_CHANNEL_ID, setNotificationActions())
+
+    await Notifications.scheduleNotificationAsync(createNotificationRequest(WATER_REMINDER_NOTIFICATION_ID, notificationContent, null))
 
     return
 }
@@ -74,9 +79,10 @@ function createNotificationRequest (identifier, content, trigger) {
 }
 
 
-function BuildNotificationContent (title, body, data) {
+function BuildNotificationContent (categoryIdentifier, title, body, data) {
     //https://docs.expo.io/versions/v41.0.0/sdk/notifications/#notificationcontent
     return {
+        categoryIdentifier, //This help you attach action(s) to your notification
         title,
         body,
         data,
@@ -90,4 +96,41 @@ function BuildNotificationContent (title, body, data) {
             },
         })
     }
+}
+
+function setNotificationActions(){
+    return [
+        ignoreReminderAction(),
+        drinkWaterAction(),
+    ]
+}
+
+/** Create an Action for the user to ignore the notification (and dismiss it) */
+function ignoreReminderAction(){
+    return {
+        identifier: ACTION_DISMISS_NOTIFICATION,
+        buttonTitle: "No, thanks.",
+        options: {
+            isAuthenticationRequired: true,
+          ...Platform.select({ ios:{ isAuthenticationRequired: true, }}),
+          opensAppToForeground: false, //we dont want our app to open
+        },
+    }
+}
+
+/** Create an Action for the user to tell us they've had a glass of water  */
+function drinkWaterAction(){
+    return {
+        identifier: ACTION_INCREMENT_WATER_COUNT, 
+        buttonTitle: "👍 I did it!",
+        options: {
+          ...Platform.select({ ios:{ isAuthenticationRequired: true, }}),
+          opensAppToForeground: false, //we dont want our app to open
+        },
+    }
+}
+
+/** Dismiss any notifications that we have created with our hydration app */
+export async function clearAllNotifications(){
+    return await Notifications.dismissAllNotificationsAsync()
 }
