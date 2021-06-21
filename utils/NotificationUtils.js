@@ -109,10 +109,10 @@ function setNotificationActions(){
 function ignoreReminderAction(){
     return {
         identifier: ACTION_DISMISS_NOTIFICATION,
-        buttonTitle: "No, thanks.",
+        buttonTitle: "❌ No, thanks.",
         options: {
             isAuthenticationRequired: true,
-          ...Platform.select({ ios:{ isAuthenticationRequired: true, }}),
+          ...Platform.select({ ios:{ isAuthenticationRequired: true, isDestructive: true }}),
           opensAppToForeground: false, //we dont want our app to open
         },
     }

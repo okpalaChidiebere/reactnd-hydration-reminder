@@ -10,6 +10,13 @@
     ],
     "notification": {
       "icon": "./assets/ic_drink_notification.png"
+    },
+    "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch"
+        ]
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { RECEIVE_PREFERENCES, INCREMENT_WATER_COUNT, DECREMENT_WATER_COUNT } from '../actions'
+import { RECEIVE_PREFERENCES, INCREMENT_PERF_COUNT, DECREMENT_PERF_COUNT } from '../actions'
 
 function preferences (state = {}, action) {
   switch (action.type) {
@@ -8,7 +8,7 @@ function preferences (state = {}, action) {
         ...action.preferences
       }
 
-    case INCREMENT_WATER_COUNT: {
+    case INCREMENT_PERF_COUNT: {
       const { key } = action
       const preference = { [key]: ++state[key] }
       return {
@@ -17,7 +17,7 @@ function preferences (state = {}, action) {
       }
     }
       
-    case DECREMENT_WATER_COUNT: {
+    case DECREMENT_PERF_COUNT: {
       const { key } = action
       const preference = { [key]: state[key] === 0 ? state[key] : --state[key] }
       return {

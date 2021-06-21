@@ -1,8 +1,8 @@
-import { incrementWaterCount }  from "../utils/PreferenceUtilities"
+import { incrementWaterCount, incrementChargingReminderCount, KEY_CHARGING_REMINDER_COUNT, KEY_WATER_COUNT }  from "../utils/PreferenceUtilities"
 
 export const RECEIVE_PREFERENCES = "RECEIVE_PREFERENCES" //receive datas from our PreferenceUtilities (AsyncStorage)
-export const INCREMENT_WATER_COUNT = "INCREMENT_WATER_COUNT"
-export const DECREMENT_WATER_COUNT = "DECREMENT_WATER_COUNT"
+export const INCREMENT_PERF_COUNT = "INCREMENT_PERF_COUNT"
+export const DECREMENT_PERF_COUNT = "DECREMENT_PERF_COUNT"
 
 
 export function receivePreferences(preferences) {
@@ -12,16 +12,16 @@ export function receivePreferences(preferences) {
   }
 }
 
-function incrementWaterCountPref(key) {
+function incrementPrefByKey(key) {
   return {
-    type: INCREMENT_WATER_COUNT,
+    type: INCREMENT_PERF_COUNT,
     key,
   }
 }
 
-function decrementWaterCountPref(key) {
+function decrementPrefByKey(key) {
   return {
-    type: DECREMENT_WATER_COUNT,
+    type: DECREMENT_PERF_COUNT,
     key,
   }
 }
@@ -35,11 +35,15 @@ export const handleSavePreferences = (key) => async (dispatch) => {
    * there might be a delay. You dont want the delay to reflect in your UI 
   */
   try{
-    dispatch(incrementWaterCountPref(key))
-    incrementWaterCount() //NOTE: the function that performs assumed long running task must be asycnhronous (keyword "async")
+    dispatch(incrementPrefByKey(key))
+    if(KEY_WATER_COUNT === key){
+      incrementWaterCount() //NOTE: the function that performs assumed long running task must be asycnhronous (keyword "async")
+    }else if(KEY_CHARGING_REMINDER_COUNT === key){
+      incrementChargingReminderCount()
+    }
 
   }catch(e){
-    dispatch(decrementWaterCountPref(key))
+    dispatch(decrementPrefByKey(key))
     alert('An error occurred. Try again.')
     console.log(e)
   }

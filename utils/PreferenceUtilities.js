@@ -29,7 +29,18 @@ export function setWaterCount(glassesOfWater) {
     }))
 }
 
+function setChargingReminderCount(chargingReminders) {
+    return AsyncStorage.mergeItem(HYDRATION_APP_STORAGE_KEY, JSON.stringify({
+        [KEY_CHARGING_REMINDER_COUNT]: chargingReminders
+    }))
+}
+
 export async function incrementWaterCount() {
     let waterCount = await getWaterCount()
     setWaterCount(++waterCount)
+}
+
+export async function incrementChargingReminderCount() {
+    let chargingReminders = await getChargingReminderCount()
+    setChargingReminderCount(++chargingReminders)
 }
