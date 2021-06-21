@@ -1,16 +1,23 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Text, View, StyleSheet, Image, Platform }  from "react-native"
 import { connect } from "react-redux"
 import ImageButtonAndroid from "./ImageButtonAndroid"
 import ImageButtonIos from "./ImageButtonIos"
 import { getChargingReminderCount, getWaterCount, KEY_CHARGING_REMINDER_COUNT, KEY_WATER_COUNT } from "../utils/PreferenceUtilities"
 import { receivePreferences, handleSavePreferences } from "../actions"
+import * as Battery from "expo-battery"
 
 function MainComponent ({ preferences, dispatch }) {
+
+    const [ batteryState, setBatteryState ] = useState(null)
+    const subscriptionRef = useRef();
 
     useEffect(() => {
         (async () => {
             try{
+                const batteryState = await Battery.getBatteryStateAsync()
+                setBatteryState(batteryState === Battery.BatteryState.CHARGING)
+
                 const chargingReminders = await getChargingReminderCount()
                 const glassesOfWater = await getWaterCount()
 
@@ -24,6 +31,16 @@ function MainComponent ({ preferences, dispatch }) {
                 console.warn("Error with preference storage", e)
             }
         })()
+
+
+        subscriptionRef.current = Battery.addBatteryStateListener(({ batteryState }) => {
+            setBatteryState(batteryState === Battery.BatteryState.CHARGING)
+        })
+
+        return () => {
+            subscriptionRef.current && subscriptionRef.current.remove()
+            subscriptionRef.current = null
+        };
     }, [])
 
     return (
@@ -56,7 +73,7 @@ function MainComponent ({ preferences, dispatch }) {
             }}>
                 <Image
                     style={{width: 70, height: 70}}
-                    source={require("../assets/ic_power_grey_80px.png")}
+                    source={showCharging(batteryState)}
                 />
                 <Text style={{width: 350}}>{`Hydrate while charging reminder sent ${preferences[KEY_CHARGING_REMINDER_COUNT]} times`}</Text>
             </View>
@@ -92,4 +109,10 @@ export function MainComponentOptions({ route, navigation }) {
             backgroundColor: "#3F51B5",
         },
     }
+}
+
+function showCharging (isCharging){
+    return isCharging 
+    ? require("../assets/ic_power_pink_80px.png") 
+    : require("../assets/ic_power_grey_80px.png")
 }
